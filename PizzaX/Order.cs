@@ -76,21 +76,25 @@ namespace com.pizzaworld.Orders
 				//	Int32.TryParse(sizeInput, out sizeNo);
 				//} while (sizeNo<0 && sizeNo>3 );
 
-				int parseOffset;
+				int parseOffset,topIdx;
 				do {
 					int toppingIndx = 0;
 					parseOffset = 2;
 					for (;parseOffset< exTopInput.Length - 1; parseOffset += 2)
 					{
-						if (exTopInput[0] != 'H')
+						if (exTopInput[0] == 'H')
 						{
-							halfTopping[htIndx++] =(Topping)exTopInput[2 + parseOffset];
+							Int32.TryParse(exTopInput.Substring(parseOffset,2), out topIdx);
+							halfTopping[htIndx++] =(Topping)topIdx;
 							this._extracost += 0.75D;
+							Console.WriteLine("half topping" + (htIndx - 1));
 						}
-						else if (exTopInput[0] != 'F')
+						else if (exTopInput[0] == 'F')
 						{
-							fullTopping[ftIndx++] = (Topping)exTopInput[2 + parseOffset];
+							Int32.TryParse(exTopInput.Substring(parseOffset, 2), out topIdx);
+							fullTopping[ftIndx++] = (Topping)topIdx;
 							this._extracost += 1.10D;
+							Console.WriteLine("full topping" + (ftIndx - 1));
 						}
 					}
 					Console.WriteLine("How many pizzas of this type & size would you like?");
@@ -105,16 +109,21 @@ namespace com.pizzaworld.Orders
 				} while (exTopInput[0]!='N' && exTopInput[0]!='F' && exTopInput[0]!='H');
 				for (; exTopInput[0]!='N' && parseOffset < exTopInput.Length - 1; parseOffset += 2)
 				{
-					if (exTopInput[0] != 'H')
+					Console.WriteLine("***" + exTopInput.Substring(1, 8));
+					Console.WriteLine("***" + exTopInput.Substring(1, 8));
+					if (exTopInput[0] == 'H')
 					{
-						halfTopping[htIndx++] =(Topping) exTopInput[2 + parseOffset];
+						Int32.TryParse(exTopInput.Substring(parseOffset, 2), out topIdx);
+						halfTopping[htIndx++] =(Topping)topIdx;
 						this._extracost += 0.75D;
 						Console.WriteLine("half topping" + (htIndx - 1));
-;					}
-					else if (exTopInput[0] != 'F')
+					}
+					else if (exTopInput[0] == 'F')
 					{
-						fullTopping[ftIndx++] = (Topping)exTopInput[2 + parseOffset];
+						Int32.TryParse(exTopInput.Substring(parseOffset, 2), out topIdx);
+						fullTopping[ftIndx++] = (Topping)topIdx;
 						this._extracost += 1.10D;
+						Console.WriteLine("full topping" + (ftIndx - 1));
 					}
 				}
 
@@ -122,7 +131,7 @@ namespace com.pizzaworld.Orders
 				Console.WriteLine("How many pizzas of this type & size would you like?");
                 countInput=Console.ReadLine();
                 Int32.TryParse(countInput,out countNo);
-				totalCost +=countNo* (Pizza.getpizzacost((uint)index)+this._extracost);
+				totalCost +=countNo* (Pizza.getpizzacost((uint)index-1)+this._extracost);
 				Console.WriteLine("$"+totalCost);
                 do {
 		      	Console.WriteLine("Is this pizza acceptable?(Y/N)");
@@ -176,12 +185,16 @@ namespace com.pizzaworld.Orders
             //Order(string arg0, string arg1, string arg2, float arg3, Pizza[]arg4)
             System.Collections.Generic.List<Order> list = new List<Order>();
 			SqlConnection connection = new SqlConnection("Data Source=(local);");
-			string insertsql ="INSERT INTO Orders VALUES('jxcdrrd', '23 lunny av,Austin', '2343-23434-344-344f', 4, 'mushroom,chicken', DATETIME(2007 - 04 - 30 13:10:02))" ;
+			string insertsql ="INSERT INTO Orders VALUES('jxcdrrd', '23 lunny av,Austin', '2343-23434-344-344f', 4, 'mushroom,chicken', '2017-04 - 30 13:10:02))" ;
+			string insertsql2 = "INSERT INTO Orders VALUES('jxcdrrd', '23 lunny av,Austin', '2343-23434-344-344f', 4, 'mushroom,anchovies', '2018-06-30 14:10:02')";
+			string insertsql3 = "INSERT INTO Orders VALUES('jxcdrrd', '23 lunny av,Austin', '2343-23434-344-344f', 4, 'mushroom,chicken', '2018-09-20 13:16:02')";
+			string insertsql4 = "INSERT INTO Orders VALUES('jxcdrrd', '23 lunny av,Austin', '2343-23434-344-344f', 4, 'mushroom,chicken', '2019-10-30 13:18:02')";
 			string userpurchases = "select from Orders where name='%' order by timestamp";
 			Order p;
-			DateTime _ordertime;
+			String Name;
+			System.DateTime _ordertime;
 			String Address;
-			int itemsNo;
+			int itemsNo, nameNdx;
 			SqlCommand cmd = new SqlCommand();//
 {
 
@@ -194,26 +207,28 @@ namespace com.pizzaworld.Orders
 				{
 					// Read advances to the next row.
 					while (reader.Read())
-					{
-					
+					{	
 						// To avoid unexpected bugs access columns by name.
 					//	_ordertime = reader.GetInt32(reader.GetOrdinal("ID"));
 						Address = reader.GetString(reader.GetOrdinal("Address"));
+					    nameNdx = reader.GetOrdinal("Name");
 						int paymentIndex = reader.GetOrdinal("payment");
+					    int orderTimeIndex = reader.GetOrdinal("ordertime");
+						 _ordertime = reader.GetDateTime(orderTimeIndex);
 						// If a column is nullable always check for DBNull...
 						//if (!reader.IsDBNull(middleNameIndex))
-					//	{
-					//		p. = reader.GetString(middleNameIndex);
-					//	}
-					//  itemsStr = reader.GetString(reader.GetOrdinal("items"));
-					//p = new Order("", "", "", double, Pizza[]);
-	//						Name NVARCHAR(4000) NOT NULL,
-	// Address NVARCHAR(40) NOT NULL,
-	// payment NVARCHAR(4000) NOT NULL,
-	// Stores NVARCHAR(20) NOT NULL,
-	// items NVARCHAR(4000) NOT NULL,
-	// ordertime DATETIME2 NOT NULL,
-					}
+						//	{
+						//		p. = reader.GetString(middleNameIndex);
+						//	}
+						//  itemsStr = reader.GetString(reader.GetOrdinal("items"));
+						//p = new Order("", "", "", double, Pizza[]);
+						//						Name NVARCHAR(4000) NOT NULL,
+						// Address NVARCHAR(40) NOT NULL,
+						// payment NVARCHAR(4000) NOT NULL,
+						// Stores NVARCHAR(20) NOT NULL,
+						// items NVARCHAR(4000) NOT NULL,
+						// ordertime DATETIME2 NOT NULL,
+						}
 				}
 			}
 		}
