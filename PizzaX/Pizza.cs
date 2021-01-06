@@ -13,12 +13,16 @@ namespace  com.pizzaworld.Orders {
        private uint _count { get; set; }
        private uint size;
        private Topping[] toppings;
-       public Pizza( uint size, uint count,uint crust,Topping[] toppings, double cost) {
+        private Topping[] halfToppings;
+        private double _extracost { get; set; }
+       public Pizza( uint size, uint count,uint crust,Topping[] toppings,Topping[] halfToppings, double cost,double extracost) {
 	      this.size=size;
 	       this._count=count;
            this.crust = crust;
            this.toppings = toppings;
+            this._extracost = extracost;
             this._unitcost = cost;
+            this.halfToppings = halfToppings;
        }
         public uint getCount() { return this._count; }
         public double getUnitCost() {
@@ -47,36 +51,38 @@ namespace  com.pizzaworld.Orders {
         static public void OnLoaded()
         {
           //  artichokes, anchovies, chicken, green_peppers, mushrooms, pepporoni, red_peppers };
-        _pizza[0] = new Pizza(1, 1, 1,  new Topping[]{ Topping.artichokes }, 6.75d);
-            _pizza[1] = new Pizza(2, 1, 1, new Topping[] { Topping.artichokes }, 8.75d);
-            _pizza[2] = new Pizza(3, 1, 1, new Topping[] { Topping.artichokes }, 11.75d);
-            _pizza[3] = new Pizza(1, 1, 2, new Topping[] { Topping.artichokes }, 6.75d);
-            _pizza[4] = new Pizza(2, 1, 2, new Topping[] { Topping.artichokes }, 8.75d);
-            _pizza[5] = new Pizza(3, 1, 2, new Topping[] { Topping.artichokes }, 11.75d);
-            _pizza[6] = new Pizza(1, 1, 1, new Topping[] { Topping.anchovies}, 6.75d);
-            _pizza[7] = new Pizza(2, 1, 1, new Topping[] { Topping.anchovies}, 8.75d);
-            _pizza[8] = new Pizza(3, 1, 1, new Topping[] { Topping.anchovies }, 11.75d);
-            _pizza[9] = new Pizza(1, 1, 2, new Topping[] { Topping.anchovies }, 6.75d);
-            _pizza[10] = new Pizza(2, 1, 2, new Topping[] { Topping.anchovies  }, 8.75d);
-            _pizza[11] = new Pizza(3, 1, 2, new Topping[] { Topping.anchovies }, 11.75d);
-            _pizza[12] = new Pizza(1, 1, 1, new Topping[] { Topping.chicken }, 6.75d);
-            _pizza[13] = new Pizza(2, 1, 1, new Topping[] { Topping.chicken  }, 8.75d);
-            _pizza[14] = new Pizza(3, 1, 1, new Topping[] { Topping.chicken }, 11.75d);
-            _pizza[15] = new Pizza(1, 1, 2, new Topping[] { Topping.chicken }, 6.75d);
-            _pizza[16] = new Pizza(2, 1, 2, new Topping[] { Topping.chicken  }, 8.75d);
-            _pizza[17] = new Pizza(3, 1, 2, new Topping[] { Topping.chicken }, 11.75d);
-            _pizza[18] = new Pizza(1, 1, 1, new Topping[] { Topping.green_peppers }, 6.75d);
-            _pizza[19] = new Pizza(2, 1, 1, new Topping[] { Topping.green_peppers  }, 8.75d);
-            _pizza[20] = new Pizza(3, 1, 1, new Topping[] { Topping.green_peppers  }, 11.75d);
-            _pizza[21] = new Pizza(1, 1, 2, new Topping[] { Topping.green_peppers  }, 6.75d);
-            _pizza[22] = new Pizza(2, 1, 2, new Topping[] { Topping.green_peppers  }, 8.75d);
-            _pizza[23] = new Pizza(3, 1, 2, new Topping[] { Topping.green_peppers   }, 11.75d);
+        _pizza[0] = new Pizza(1, 1, 1,  new Topping[]{ Topping.artichokes },null, 6.75d,0);
+            _pizza[1] = new Pizza(2, 1, 1, new Topping[] { Topping.artichokes }, null, 8.75d,0);
+            _pizza[2] = new Pizza(3, 1, 1, new Topping[] { Topping.artichokes }, null, 11.75d,0);
+            _pizza[3] = new Pizza(1, 1, 2, new Topping[] { Topping.artichokes }, null, 6.75d,0);
+            _pizza[4] = new Pizza(2, 1, 2, new Topping[] { Topping.artichokes }, null, 8.75d,0);
+            _pizza[5] = new Pizza(3, 1, 2, new Topping[] { Topping.artichokes }, null, 11.75d,0);
+            _pizza[6] = new Pizza(1, 1, 1, new Topping[] { Topping.anchovies}, null, 6.75d,0);
+            _pizza[7] = new Pizza(2, 1, 1, new Topping[] { Topping.anchovies}, null, 8.75d,0);
+            _pizza[8] = new Pizza(3, 1, 1, new Topping[] { Topping.anchovies }, null, 11.75d,0);
+            _pizza[9] = new Pizza(1, 1, 2, new Topping[] { Topping.anchovies }, null, 6.75d,0);
+            _pizza[10] = new Pizza(2, 1, 2, new Topping[] { Topping.anchovies  }, null, 8.75d,0);
+            _pizza[11] = new Pizza(3, 1, 2, new Topping[] { Topping.anchovies }, null, 11.75d,0);
+            _pizza[12] = new Pizza(1, 1, 1, new Topping[] { Topping.chicken }, null, 6.75d,0);
+            _pizza[13] = new Pizza(2, 1, 1, new Topping[] { Topping.chicken  }, null, 8.75d,0);
+            _pizza[14] = new Pizza(3, 1, 1, new Topping[] { Topping.chicken }, null, 11.75d,0);
+            _pizza[15] = new Pizza(1, 1, 2, new Topping[] { Topping.chicken }, null, 6.75d,0);
+            _pizza[16] = new Pizza(2, 1, 2, new Topping[] { Topping.chicken }, null, 6.75d, 0);
+            _pizza[17] = new Pizza(3, 1, 2, new Topping[] { Topping.chicken },null, 6.75d,0);
+            _pizza[18] = new Pizza(1, 1, 1, new Topping[] { Topping.green_peppers },null, 6.75d,0);
+            _pizza[19] = new Pizza(2, 1, 1, new Topping[] { Topping.green_peppers  },null, 8.75d,0);
+            _pizza[20] = new Pizza(3, 1, 1, new Topping[] { Topping.green_peppers  },null, 11.75d,0);
+            _pizza[21] = new Pizza(1, 1, 2, new Topping[] { Topping.green_peppers  },null, 6.75d,0);
+            _pizza[22] = new Pizza(2, 1, 2, new Topping[] { Topping.green_peppers  },null, 8.75d,0);
+            _pizza[23] = new Pizza(3, 1, 2, new Topping[] { Topping.green_peppers   },null, 11.75d,0);
         }
         public string toString()
         {
+            
             string[] sizes = {"small","medium","large"};
             string[] crusts = { "thick", "medium", "thin" };
-            string message = this._count +" "+ sizes[this.size-1]+" "+crusts[this.crust]+" "+this.toppings[0]+" pizza $"+this._unitcost;
+            string message = this._count + " " + sizes[this.size - 1] + " ";
+            message +=crusts[this.crust]+" "+this.toppings[0]+" pizza $"+this._unitcost+this._extracost;
             return message;
         }
     }

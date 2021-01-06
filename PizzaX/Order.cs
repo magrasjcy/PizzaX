@@ -12,8 +12,8 @@ namespace com.pizzaworld.Orders
 		//   public string  getInput();
 		//}
 		private double _extracost = 0;
-		private int[] halfTopping = new int[12];
-		private int[] fullTopping = new int[12];
+		private Topping[] halfTopping = new Topping[12];
+		private Topping[] fullTopping = new Topping[12];
 		private int htIndx = 0, ftIndx = 0;
 		static class X
         {
@@ -68,13 +68,13 @@ namespace com.pizzaworld.Orders
 					input = Console.ReadLine();
 					Int32.TryParse(input, out index);
 				} while (index < 0 && index > 24);
-				do {
-					Console.WriteLine("3=Thick,2=Medium,1=Thin");
-					Console.WriteLine("what size pizza would you like?");
+				//do {
+				//	Console.WriteLine("3=Thick,2=Medium,1=Thin");
+				//	Console.WriteLine("what size pizza would you like?");
 
-					sizeInput = Console.ReadLine();
-					Int32.TryParse(sizeInput, out sizeNo);
-				} while (sizeNo<0 && sizeNo>3 );
+				//	sizeInput = Console.ReadLine();
+				//	Int32.TryParse(sizeInput, out sizeNo);
+				//} while (sizeNo<0 && sizeNo>3 );
 
 				int parseOffset;
 				do {
@@ -84,12 +84,12 @@ namespace com.pizzaworld.Orders
 					{
 						if (exTopInput[0] != 'H')
 						{
-							halfTopping[htIndx++] = exTopInput[2 + parseOffset];
+							halfTopping[htIndx++] =(Topping)exTopInput[2 + parseOffset];
 							this._extracost += 0.75D;
 						}
 						else if (exTopInput[0] != 'F')
 						{
-							fullTopping[ftIndx++] = exTopInput[2 + parseOffset];
+							fullTopping[ftIndx++] = (Topping)exTopInput[2 + parseOffset];
 							this._extracost += 1.10D;
 						}
 					}
@@ -107,12 +107,13 @@ namespace com.pizzaworld.Orders
 				{
 					if (exTopInput[0] != 'H')
 					{
-						halfTopping[htIndx++] = exTopInput[2 + parseOffset];
+						halfTopping[htIndx++] =(Topping) exTopInput[2 + parseOffset];
 						this._extracost += 0.75D;
-					}
+						Console.WriteLine("half topping" + (htIndx - 1));
+;					}
 					else if (exTopInput[0] != 'F')
 					{
-						fullTopping[ftIndx++] = exTopInput[2 + parseOffset];
+						fullTopping[ftIndx++] = (Topping)exTopInput[2 + parseOffset];
 						this._extracost += 1.10D;
 					}
 				}
@@ -129,7 +130,9 @@ namespace com.pizzaworld.Orders
 		     
 		}while (pizzaInput[0]!='Y'&&pizzaInput[0]!='N');
 		if (pizzaInput[0]=='Y') {
-            Pizza pizza=new Pizza((uint)index,(uint)sizeNo,(uint)countNo, Pizza.getToppings((uint)index), Pizza.getpizzacost((uint)index));//pizza type size count	
+			sizeNo=0;
+            Pizza pizza=new Pizza((uint)index,(uint)sizeNo,(uint)countNo, Pizza.getToppings((uint)index),halfTopping,this._extracost,
+				   Pizza.getpizzacost((uint)index));//pizza type size count	
 		    this.items[arrayIdx++]=pizza;
 		}
                 do {	
